@@ -1,4 +1,5 @@
 using Domain.Models;
+using Infrastructure.DTOS.Companies;
 using Infrastructure.Interface;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,12 @@ public class OrderController(IOrderService orderService1) : ControllerBase
     public async Task<List<Order>> GetListAsync()
     {
         return await orderService1.GetOrdersAsync();
+    }
+    
+    [HttpGet ("with-company-names")]
+    public async Task<List<GetOrderWithCompanyName>> GetAllOrdersWithCompanyNamesAsync()
+    {
+        return await orderService1.GetAllOrdersWithCompanyNamesAsync();
     }
 
     [HttpPost]

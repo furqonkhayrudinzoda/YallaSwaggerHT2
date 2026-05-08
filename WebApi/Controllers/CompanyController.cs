@@ -1,4 +1,6 @@
 using Domain.Models;
+using Infrastructure.Dtos.GetCompanyWithOrderCount;
+using Infrastructure.Dtos.GetCompanyWithSubscriptionCount;
 using Infrastructure.Interface;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +14,18 @@ public class CompanyController(ICompanyService companyService1) : ControllerBase
     public async Task<List<Company>> GetListAsync()
     {
         return await companyService1.GetCompaniesAsync();
+    }
+
+    [HttpGet ("with-order-count")]
+    public async Task<List<GetCompanyWithOrderCountDto>> GetCompaniesWithOrderCountAsync()
+    {
+        return await companyService1.GetCompaniesWithOrderCountAsync();
+    }
+
+    [HttpGet ("with-subscription-count")]
+    public async Task<List<GetCompanyWithSubscriptionCountDto>> GetCompaniesWithSubscriptionCountAsync()
+    {
+        return await companyService1.GetCompaniesWithSubscriptionCountAsync();
     }
 
     [HttpPost]
