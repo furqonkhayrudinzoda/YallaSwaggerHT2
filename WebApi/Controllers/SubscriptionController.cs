@@ -1,4 +1,5 @@
 using Domain.Models;
+using Infrastructure.DTOS.Companies;
 using Infrastructure.Interface;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,11 @@ public class SubscriptionController(ISubscriptionService subscriptionService1) :
     public async Task<List<Subscription>> GetListAsync()
     {
         return await subscriptionService1.GetSubscriptionsAsync();
+    }
+    [HttpGet ("company-count-order-count-subscription-count")]
+    public async Task<List<GetCompanyCountOrderCountSubscriptionCount>> GetCompanyCountOrderCountSubscriptionCountAsync()
+    {
+        return await subscriptionService1.GetCompanyCountOrderCountSubscriptionCountAsync();
     }
 
     [HttpPost]
