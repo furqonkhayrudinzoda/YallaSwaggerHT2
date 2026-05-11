@@ -12,6 +12,7 @@ builder.Services.AddScoped<IMenuItemService, MenuItemService>();
 builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderItemService, OrderItemService>();
+builder.Services.AddScoped<DataContext>();
 
 
 var app = builder.Build();

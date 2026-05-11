@@ -1,7 +1,6 @@
 using Dapper;
 using Domain.Models;
 using Infrastructure.Interface;
-
 namespace Infrastructure.Services;
 
 public class MenuItemService(DataContext context) : IMenuItemService
