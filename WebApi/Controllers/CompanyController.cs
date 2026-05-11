@@ -10,7 +10,7 @@ namespace WebApi.Controllers;
 [Route("api/companies")]
 public class CompanyController(ICompanyService companyService1) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet]   
     public async Task<List<Company>> GetListAsync()
     {
         return await companyService1.GetCompaniesAsync();
