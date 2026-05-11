@@ -4,10 +4,8 @@ using Infrastructure.Interface;
 
 namespace Infrastructure.Services;
 
-public class MenuService : IMenuService
+public class MenuService(DataContext context) : IMenuService
 {
-    private readonly DataContext context = new DataContext();
-
     public async Task<List<Menu>> GetMenusAsync()
     {
         using var connection = context.GetConnection();
@@ -18,7 +16,6 @@ public class MenuService : IMenuService
                     created_at as CreatedAt,
                     updated_at as UpdatedAt
                     from menus";
-
         var result = await connection.QueryAsync<Menu>(sql);
         return result.ToList();
     }

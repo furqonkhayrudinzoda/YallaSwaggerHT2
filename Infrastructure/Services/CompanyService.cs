@@ -1,13 +1,13 @@
 using Dapper;
 using Domain.Models;
+using Infrastructure.Dtos.GetCompanyWithOrderCount;
+using Infrastructure.Dtos.GetCompanyWithSubscriptionCount;
 using Infrastructure.Interface;
 
 namespace Infrastructure.Services;
 
-public class CompanyService : ICompanyService
+public class CompanyService(DataContext context) : ICompanyService
 {
-    private readonly DataContext context = new DataContext();
-
     public async Task<List<Company>> GetCompaniesAsync()
     {
         using var connection = context.GetConnection();
@@ -226,5 +226,31 @@ public class CompanyService : ICompanyService
         }
         Console.WriteLine("Company found");
         return company;
+    }
+
+    public async Task<List<GetCompanyWithOrderCountDto>> GetCompaniesWithOrderCountAsync()
+    {
+        await using var connection = context.GetConnection();
+        connection.Open();
+
+        const string query = @"select c.id as CompanyId, c.name as CompanyName, count(o.id) as OrderCount
+                            from companies c
+                            left join orders o on c.id = o.company_id
+                            group by c.id, c.name";
+        var result = await connection.QueryAsync<GetCompanyWithOrderCountDto>(query);
+        return result.ToList();
+    }
+
+    public async Task<List<GetCompanyWithSubscriptionCountDto>> GetCompaniesWithSubscriptionCountAsync()
+    {
+        await using var connection = context.GetConnection();
+        connection.Open();
+
+        const string query = @"select c.Id as CompanyId, c.Name as CompanyName, c.Address as CompanyAddress, count(s.Id) as SubscriptionCount
+                        from companies c
+                        join subscriptions s on c.Id = s.company_id
+                        group by c.Id, c.Name, c.Address";
+        var result = await connection.QueryAsync<GetCompanyWithSubscriptionCountDto>(query);
+        return result.ToList();
     }
 }

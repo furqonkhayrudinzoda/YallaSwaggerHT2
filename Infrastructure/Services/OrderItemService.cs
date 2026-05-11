@@ -4,10 +4,8 @@ using Infrastructure.Interface;
 
 namespace Infrastructure.Services;
 
-public class OrderItemService : IOrderItemService
+public class OrderItemService(DataContext context) : IOrderItemService
 {
-    private readonly DataContext context = new DataContext();
-
     public async Task<List<OrderItem>> GetOrderItemsAsync()
     {
         using var connection = context.GetConnection();
@@ -20,7 +18,6 @@ public class OrderItemService : IOrderItemService
                 created_at as CreatedAt,
                 updated_at as UpdatedAt
                 from orderitems";
-
         var result = await connection.QueryAsync<OrderItem>(sql);
         return result.ToList();
     }

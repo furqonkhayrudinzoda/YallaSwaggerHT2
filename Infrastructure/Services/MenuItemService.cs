@@ -4,10 +4,8 @@ using Infrastructure.Interface;
 
 namespace Infrastructure.Services;
 
-public class MenuItemService : IMenuItemService
+public class MenuItemService(DataContext context) : IMenuItemService
 {
-    private readonly DataContext context = new DataContext();
-
     public async Task<List<MenuItem>> GetMenuItemsAsync()
     {
         using var connection = context.GetConnection();

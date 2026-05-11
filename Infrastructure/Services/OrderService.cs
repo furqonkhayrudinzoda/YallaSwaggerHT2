@@ -1,13 +1,12 @@
 using Dapper;
 using Domain.Models;
+using Infrastructure.DTOS.Companies;
 using Infrastructure.Interface;
 
 namespace Infrastructure.Services;
 
-public class OrderService : IOrderService
+public class OrderService(DataContext context) : IOrderService
 {
-    private readonly DataContext context = new DataContext();
-
     public async Task<List<Order>> GetOrdersAsync()
     {
         using var connection = context.GetConnection();
@@ -204,4 +203,18 @@ public class OrderService : IOrderService
         Console.WriteLine("Order found");
         return result;
     }
+
+       public async Task<List<GetOrderWithCompanyName>> GetAllOrdersWithCompanyNamesAsync()
+    {
+        using var connection = context.GetConnection();
+        connection.Open();
+
+        const string sql = @"select o.Id as OrderId, o.company_id, o.order_date, c.name as CompanyName
+                            from orders o
+                            join companies c on o.company_id = c.Id
+                            group by o.Id, o.company_id, o.order_date, c.name";
+         var result = await connection.QueryAsync<GetOrderWithCompanyName>(sql);
+        return result.ToList();
+    }
+
 }

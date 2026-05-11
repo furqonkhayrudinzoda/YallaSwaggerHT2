@@ -1,13 +1,12 @@
 using Dapper;
 using Domain.Models;
+using Infrastructure.DTOS.Companies;
 using Infrastructure.Interface;
 
 namespace Infrastructure.Services;
 
-public class SubscriptionService : ISubscriptionService
+public class SubscriptionService(DataContext context) : ISubscriptionService
 {
-    private readonly DataContext context = new DataContext();
-
     public async Task<List<Subscription>> GetSubscriptionsAsync()
     {
         using var connection = context.GetConnection();
@@ -23,7 +22,6 @@ public class SubscriptionService : ISubscriptionService
                     created_at as CreatedAt,
                     updated_at as UpdatedAt
                     from subscriptions";
-
         var result = await connection.QueryAsync<Subscription>(sql);
         return result.ToList();
     }
@@ -180,4 +178,17 @@ public class SubscriptionService : ISubscriptionService
         Console.WriteLine("Subscription found");
         return result;
     }
+
+    public async Task<List<GetCompanyCountOrderCountSubscriptionCount>> GetCompanyCountOrderCountSubscriptionCountAsync()
+    {
+        using var connection = context.GetConnection();
+        connection.Open();
+
+        const string sql = @"SELECT (SELECT COUNT(*) FROM companies) AS CompanyId, 
+                    (SELECT COUNT(*) FROM orders) AS OrderCount, 
+                    (SELECT COUNT(*) FROM subscriptions) AS SubscriptionCount";
+        var result = await connection.QueryAsync<GetCompanyCountOrderCountSubscriptionCount>(sql);
+        return result.ToList();
+    }
+
 }
